@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABHI SIR Store</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: 2D cartoon sticker style on a blue gradient. Thick navy outlines, hard offset shadows, chunky yellow buttons. Header, Sensi/Panel switch, card grid that swaps to one detail view, key unlock board at the bottom. */
+:root {
+  --ink: #0b1a4a;
+  --blue-1: #0a2a8f;
+  --blue-2: #1e5bff;
+  --blue-3: #18b6ff;
+  --card: #ffffff;
+  --sky: #e6f3ff;
+  --muted: #4a5a8a;
+  --pop: #ffd23f;
+  --ok: #16a34a;
+  --bad: #d62839;
+  --f-display: "Lilita One", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "Nunito", system-ui, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--blue-1); }
+body {
+  margin: 0;
+  background-color: var(--blue-2);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(255,255,255,.22) 0 90px, transparent 91px),
+    radial-gradient(circle at 92% 30%, rgba(255,255,255,.14) 0 140px, transparent 141px),
+    linear-gradient(165deg, var(--blue-1) 0%, var(--blue-2) 45%, var(--blue-3) 100%);
+  background-attachment: fixed;
+  color: var(--ink); font-family: var(--f-body); font-weight: 600; font-size: 16px; line-height: 1.5;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 26px; }
+a { color: inherit; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--pop); outline-offset: 3px; }
+
+/* sticker primitives */
+.sticker { background: var(--card); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 6px 0 var(--ink); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: flex-start;
+  background: var(--pop); color: var(--ink); border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 4px 0 var(--ink);
+  padding: 11px 20px; font-family: var(--f-display); font-size: 18px; letter-spacing: .02em; cursor: pointer; text-decoration: none; text-align: center;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.btn.white { background: #fff; }
+.btn.blue { background: var(--blue-2); color: #fff; }
+
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo { width: 62px; height: 62px; flex: none; }
+.brand b { font-family: var(--f-display); font-weight: 400; font-size: 42px; line-height: 1; color: #fff; letter-spacing: .02em; text-shadow: 0 3px 0 var(--ink), 2px 0 0 var(--ink), -2px 0 0 var(--ink), 0 -2px 0 var(--ink), 2px 3px 0 var(--ink), -2px 3px 0 var(--ink); }
+.brand small { display: block; font-family: var(--f-display); font-weight: 400; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--pop); text-shadow: 0 2px 0 var(--ink); margin-top: 4px; }
+
+.switch { display: inline-flex; gap: 8px; align-self: flex-start; background: var(--ink); padding: 6px; border-radius: 18px; }
+.switch button { background: transparent; border: 0; border-radius: 12px; padding: 9px 28px; cursor: pointer; font-family: var(--f-display); font-size: 22px; letter-spacing: .04em; color: #b9c8ff; }
+.switch button[aria-pressed="true"] { background: var(--pop); color: var(--ink); }
+
+h2 { font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 1.1; margin: 0; color: #fff; text-shadow: 0 3px 0 var(--ink), 2px 0 0 var(--ink), -2px 0 0 var(--ink); text-wrap: balance; }
+.lede { color: #eaf2ff; margin: 8px 0 0; max-width: 62ch; text-shadow: 0 1px 0 rgba(11,26,74,.5); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 20px; }
+.card { text-align: left; padding: 0; cursor: pointer; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.card:hover { transform: translateY(-3px); }
+.banner { height: 96px; background: linear-gradient(135deg, var(--blue-3), var(--blue-2)); border-bottom: 3px solid var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; position: relative; }
+.banner svg { width: 64px; height: 64px; }
+.badge { background: var(--pop); border: 3px solid var(--ink); border-radius: 999px; font-family: var(--f-display); font-size: 22px; padding: 2px 16px; box-shadow: 0 3px 0 var(--ink); transform: rotate(4deg); color: var(--ink); }
+.card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card h3 { font-family: var(--f-display); font-weight: 400; font-size: 25px; margin: 0; line-height: 1.15; text-transform: uppercase; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: var(--sky); border: 2px solid var(--ink); border-radius: 999px; padding: 1px 10px; }
+.go { margin-top: auto; padding-top: 6px; font-family: var(--f-display); font-size: 17px; color: var(--blue-2); }
+
+.detail { display: flex; flex-direction: column; gap: 20px; }
+.back { align-self: flex-start; }
+.panel { padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel h4 { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 22px; color: var(--blue-2); letter-spacing: .03em; text-transform: uppercase; }
+.panel p { margin: 0; }
+.note { font-size: 14px; color: var(--muted); }
+details { border: 3px solid var(--ink); border-radius: 14px; background: var(--sky); }
+summary { cursor: pointer; padding: 12px 16px; font-family: var(--f-display); font-size: 18px; }
+details > div { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rate { font-family: var(--f-display); font-size: 40px; line-height: 1; }
+ul.inc { margin: 0; padding-left: 20px; color: var(--muted); }
+.pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--muted); min-width: 0; font-weight: 800; }
+input[type="text"] { background: #fff; border: 3px solid var(--ink); border-radius: 12px; padding: 10px 12px; min-width: 0; width: 100%; color: var(--ink); font-weight: 700; }
+input[type="text"]:focus { outline: none; border-color: var(--blue-2); box-shadow: 0 0 0 3px var(--pop); }
+.copyrow { display: flex; gap: 8px; }
+.copyrow .btn { padding: 8px 14px; font-size: 16px; }
+
+.apps { display: flex; gap: 10px; flex-wrap: wrap; }
+.apps .btn { padding: 9px 16px; font-size: 17px; }
+.qrbox { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+#qr { background: #fff; border: 3px solid var(--ink); border-radius: 14px; padding: 8px; line-height: 0; }
+#qr img, #qr canvas { max-width: 100%; }
+.unlock { padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.unlock h2 { color: var(--blue-2); text-shadow: none; font-size: 30px; }
+.unlock .lede { color: var(--muted); text-shadow: none; margin-top: 4px; }
+.unlock form { display: flex; gap: 10px; flex-wrap: wrap; }
+.unlock input { flex: 1 1 200px; letter-spacing: .08em; }
+.result { border: 3px solid var(--ink); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: var(--sky); }
+.result.ok { background: #dcfce7; }
+.result.bad { background: #ffe4e6; color: var(--bad); }
+.pw { font-family: var(--f-display); font-size: 24px; letter-spacing: .06em; }
+footer { color: #eaf2ff; font-size: 14px; text-align: center; text-shadow: 0 1px 0 rgba(11,26,74,.5); }
+@media (prefers-reduced-motion: no-preference) { .card { transition: transform .15s; } .btn { transition: transform .08s, box-shadow .08s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="28" fill="#ffd23f" stroke="#0b1a4a" stroke-width="3.5"/>
+        <path d="M14 42 L12 22 L24 31 L32 16 L40 31 L52 22 L50 42 Z" fill="#1e5bff" stroke="#0b1a4a" stroke-width="3.5" stroke-linejoin="round"/>
+        <rect x="14" y="44" width="36" height="7" rx="3" fill="#18b6ff" stroke="#0b1a4a" stroke-width="3.5"/>
+        <circle cx="32" cy="16" r="3" fill="#fff" stroke="#0b1a4a" stroke-width="2"/>
+      </svg>
+      <div><b>ABHI SIR</b><small>Sensi &amp; Panel store</small></div>
+    </div>
+    <a class="btn white" id="contact" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </header>
+
+  <div class="switch" role="group" aria-label="Choose product type">
+    <button type="button" id="tab-sensi" aria-pressed="true">Sensi</button>
+    <button type="button" id="tab-panel" aria-pressed="false">Panel</button>
+  </div>
+
+  <main id="view"></main>
+
+  <section class="unlock sticker" id="unlock">
+    <div>
+      <h2>Unlock your Sensi</h2>
+      <p class="lede">Bought a Sensi? Enter the key we sent you on WhatsApp to get your download.</p>
+    </div>
+    <form id="keyform" autocomplete="off">
+      <input type="text" id="keyinput" placeholder="Enter your key" aria-label="Secure key" spellcheck="false">
+      <button class="btn blue" type="submit">Unlock</button>
+    </form>
+    <div id="keyresult" aria-live="polite"></div>
+  </section>
+
+  <footer>ABHI SIR &middot; Orders are confirmed on WhatsApp after your UPI payment.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ============ EDIT THIS BLOCK ============
+   whatsapp: your number with country code, digits only (India = 91XXXXXXXXXX). SET THIS.
+   Each item: id, type ('sensi' or 'panel'), name, short, rate (INR, or null to show "Ask rate"),
+   sample (Google Drive video link, optional), includes (optional list),
+   and for sensi: key, download, password, platform (optional). */
+var CONFIG = {
+  whatsapp: "917994349585",
+  upi: "7593049584@fam",
+  supportNote: "For panel updates contact support team.",
+  items: [
+    { id: "s1", type: "sensi", name: "Skill Shot Sensi", platform: "OB55 Upgraded", short: "Skill Shot sensi, upgraded for OB55.", rate: 40,
+      sample: "", includes: [],
+      key: "2026", password: "SKILL",
+      passwordNote: "If there is any error with the password, contact the support team.",
+      download: "https://www.mediafire.com/file/udeewglnkxghp24/SKILL+SHOT+SENSI+(OB55)+UPGRADED💥.7z/file" },
+    { id: "s2", type: "sensi", name: "Expert X Free Sensi", platform: "", short: "Expert X sensi pack.", rate: 40,
+      sample: "", includes: [],
+      key: "2027", password: "",
+      download: "https://drive.google.com/drive/folders/1Vz2Ds-SECMkiMvqVnIc9JsEZjGME0Bww" },
+    { id: "p1", type: "panel", name: "Tobo Hack", platform: "", short: "Tobo Hack panel.", rate: null,
+      sample: "", includes: [] }
+  ]
+};
+/* ========================================= */
+
+var state = { tab: "sensi", sel: null, paying: false };
+var view = document.getElementById("view");
+
+var ICON_SENSI = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#fff" stroke="#0b1a4a" stroke-width="3.5"/><circle cx="32" cy="32" r="12" fill="#ffd23f" stroke="#0b1a4a" stroke-width="3.5"/><circle cx="32" cy="32" r="3.5" fill="#0b1a4a"/><path d="M32 2v10M32 52v10M2 32h10M52 32h10" stroke="#0b1a4a" stroke-width="3.5" stroke-linecap="round"/></svg>';
+var ICON_PANEL = '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4 L54 12 V30 C54 44 44 54 32 60 C20 54 10 44 10 30 V12 Z" fill="#fff" stroke="#0b1a4a" stroke-width="3.5" stroke-linejoin="round"/><path d="M36 14 L22 34 H31 L28 50 L42 28 H33 Z" fill="#ffd23f" stroke="#0b1a4a" stroke-width="3" stroke-linejoin="round"/></svg>';
+
+function esc(s) { var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+function inr(n) { return "₹" + Number(n).toLocaleString("en-IN"); }
+function wa(text) { return "https://wa.me/" + CONFIG.whatsapp + (text ? "?text=" + encodeURIComponent(text) : ""); }
+function itemById(id) { return CONFIG.items.filter(function (i) { return i.id === id; })[0]; }
+function link(u) { return esc(encodeURI(u)); }
+function upiParams(i) {
+  return "pa=" + encodeURIComponent(CONFIG.upi) + "&pn=" + encodeURIComponent("ABHI SIR") + "&am=" + encodeURIComponent(i.rate) +
+    "&cu=INR&tn=" + encodeURIComponent("ABHI SIR " + i.name);
+}
+function priceText(i) { return i.rate == null ? "Ask rate" : inr(i.rate); }
+
+document.getElementById("contact").href = wa("");
+
+function setTab(t) {
+  state.tab = t; state.sel = null; state.paying = false;
+  document.getElementById("tab-sensi").setAttribute("aria-pressed", String(t === "sensi"));
+  document.getElementById("tab-panel").setAttribute("aria-pressed", String(t === "panel"));
+  document.getElementById("unlock").hidden = t !== "sensi";
+  render();
+}
+document.getElementById("tab-sensi").onclick = function () { setTab("sensi"); };
+document.getElementById("tab-panel").onclick = function () { setTab("panel"); };
+
+function render() {
+  if (state.sel) return renderDetail(itemById(state.sel));
+  var items = CONFIG.items.filter(function (i) { return i.type === state.tab; });
+  var isSensi = state.tab === "sensi";
+  view.innerHTML = '<div style="display:flex;flex-direction:column;gap:20px"><div><h2>' + (isSensi ? "Pick a Sensi" : "Pick a Panel") + '</h2><p class="lede">' +
+    (isSensi ? "Tap a sensi to see the rate and order." : "Tap a panel to see the details and order.") + '</p></div><div class="grid">' +
+    items.map(function (i) {
+      return '<button type="button" class="card sticker" data-id="' + esc(i.id) + '"><div class="banner">' + (isSensi ? ICON_SENSI : ICON_PANEL) +
+        '<span class="badge">' + esc(priceText(i)) + '</span></div><div class="body"><h3>' + esc(i.name) + '</h3>' +
+        (i.platform ? '<div class="chips"><span class="chip">' + esc(i.platform) + '</span></div>' : "") +
+        '<p>' + esc(i.short) + '</p><span class="go">View &amp; order &rarr;</span></div></button>';
+    }).join("") + '</div></div>';
+  Array.prototype.forEach.call(view.querySelectorAll(".card"), function (c) {
+    c.onclick = function () { state.sel = c.getAttribute("data-id"); state.paying = false; render(); window.scrollTo(0, 0); };
+  });
+}
+
+function renderDetail(i) {
+  var isSensi = i.type === "sensi";
+  var h = '<div class="detail"><button type="button" class="btn white back" id="back">&larr; Back</button>' +
+    '<div><h2>' + esc(i.name) + '</h2>' + (i.platform ? '<div class="chips" style="margin-top:10px"><span class="chip">' + esc(i.platform) + '</span></div>' : "") + '<p class="lede">' + esc(i.short) + '</p></div>';
+  if (i.sample) {
+    h += '<div class="panel sticker"><h4>Sample</h4><p class="note">The sample video opens from Google Drive in a new tab.</p><a class="btn white" href="' + link(i.sample) + '" target="_blank" rel="noopener">&#9654; Watch sample video</a></div>';
+  }
+  h += '<div class="panel sticker"><h4>Details</h4><details open><summary>For more details</summary><div><div class="rate">' + esc(priceText(i)) + '</div>' +
+    (i.includes && i.includes.length ? '<ul class="inc">' + i.includes.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' : "") +
+    (isSensi ? '<p class="note">Pay by UPI, send the order on WhatsApp, then you get your key to unlock the download.</p>' : '<p class="note">' + esc(CONFIG.supportNote) + '</p>') +
+    '</div></details></div>';
+  h += '<div class="panel sticker"><h4>Order</h4>';
+  if (i.rate == null) {
+    h += '<p class="note">Rate for this panel is shared on WhatsApp.</p><a class="btn" href="' + esc(wa("Hi, I want the rate for " + i.name)) + '" target="_blank" rel="noopener">Ask rate on WhatsApp</a>';
+  } else if (!state.paying) {
+    h += '<button type="button" class="btn" id="buy">Buy now &middot; ' + esc(inr(i.rate)) + '</button>';
+  } else {
+    h += '<div class="pay-grid"><label>Pay this amount by UPI<span class="rate" style="color:var(--ink)">' + esc(inr(i.rate)) + '</span></label>' +
+      '<label>UPI ID<span class="copyrow"><input type="text" id="upi" readonly value="' + esc(CONFIG.upi) + '"><button type="button" class="btn white" id="copy">Copy</button></span></label></div>' +
+      '<div><p class="note" style="margin-bottom:8px">Pay with any UPI app (opens on your phone):</p><div class="apps">' +
+      [["Any UPI app", "upi://pay?"], ["GPay", "tez://upi/pay?"], ["PhonePe", "phonepe://pay?"], ["Paytm", "paytmmp://pay?"]].map(function (a) {
+        return '<a class="btn white" href="' + esc(a[1] + upiParams(i)) + '">' + a[0] + '</a>';
+      }).join("") + '</div></div>' +
+      '<div class="qrbox"><div id="qr" aria-label="UPI QR code"></div><p class="note">On a computer, scan this QR with any UPI app.</p></div>' +
+      '<label>Your name<input type="text" id="cname" placeholder="Name for the order" autocomplete="name"></label>' +
+      '<p class="note">After paying, tap the button below. WhatsApp opens with your order filled in. Send that message to confirm.' + (isSensi ? " You will get your key on WhatsApp." : "") + '</p>' +
+      '<a class="btn" id="send" href="#" target="_blank" rel="noopener">I have paid &middot; Send order on WhatsApp</a>';
+  }
+  h += '</div></div>';
+  view.innerHTML = h;
+  document.getElementById("back").onclick = function () { state.sel = null; state.paying = false; render(); };
+  var buy = document.getElementById("buy");
+  if (buy) buy.onclick = function () { state.paying = true; render(); };
+  var copy = document.getElementById("copy");
+  if (copy) {
+    copy.onclick = function () {
+      var inp = document.getElementById("upi");
+      function fallback() { inp.focus(); inp.select(); copy.textContent = "Selected"; }
+      try {
+        navigator.clipboard.writeText(CONFIG.upi).then(function () { copy.textContent = "Copied"; }, fallback);
+      } catch (e) { fallback(); }
+    };
+  }
+  var qr = document.getElementById("qr");
+  if (qr && window.QRCode) {
+    try { new QRCode(qr, { text: "upi://pay?" + upiParams(i), width: 170, height: 170, colorDark: "#0b1a4a", colorLight: "#ffffff" }); } catch (e) { qr.parentNode.hidden = true; }
+  } else if (qr) { qr.parentNode.hidden = true; }
+  var send = document.getElementById("send");
+  if (send) {
+    var name = document.getElementById("cname");
+    var upd = function () {
+      var msg = "New order - ABHI SIR\nType: " + (isSensi ? "Sensi" : "Panel") + "\nItem: " + i.name +
+        "\nAmount paid: " + inr(i.rate) + "\nName: " + (name.value.trim() || "-");
+      send.href = wa(msg);
+    };
+    name.oninput = upd; upd();
+  }
+}
+
+document.getElementById("keyform").onsubmit = function (e) {
+  e.preventDefault();
+  var v = document.getElementById("keyinput").value.trim();
+  var out = document.getElementById("keyresult");
+  if (!v) { out.innerHTML = ""; return; }
+  var hit = CONFIG.items.filter(function (i) { return i.type === "sensi" && i.key && i.key === v; })[0];
+  if (!hit) { out.innerHTML = '<div class="result bad">That key did not work. Check it and try again, or message us on WhatsApp.</div>'; return; }
+  out.innerHTML = '<div class="result ok"><strong style="font-family:var(--f-display);font-size:22px;font-weight:400">' + esc(hit.name) + ' unlocked</strong>' +
+    (hit.password ? '<div>Password: <span class="pw">' + esc(hit.password) + '</span></div>' : '<div class="note">No password needed.</div>') +
+    (hit.passwordNote ? '<div class="note">' + esc(hit.passwordNote) + '</div>' : "") +
+    '<a class="btn" href="' + link(hit.download) + '" target="_blank" rel="noopener">Download Sensi</a></div>';
+};
+
+setTab("sensi");
+</script>
+
+</body>
+</html>
